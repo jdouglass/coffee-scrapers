@@ -1,0 +1,17 @@
+{
+  "name": "coffee-scrapers",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "dotenv": "^16.0.1",
+    "get-all-country-info": "^1.1.6",
+    "playwright": "^1.22.2",
+    "url": "^0.11.0"
+  }
+}
