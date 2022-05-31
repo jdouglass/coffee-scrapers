@@ -1,1 +1,2 @@
-0 */12 * * * node subtext.js
+0 */12 * * * node scrapers/subtext.js
+0 */12 * * * node scrapers/monogram.js
