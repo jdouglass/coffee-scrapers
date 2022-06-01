@@ -14,7 +14,6 @@ module.exports = async function update(products, brand) {
           weight: item.weight,
           sold_out: item.sold_out,
           image_url: item.image_url,
-          date_added: item.date_added,
           product_url: item.product_url
         });
       } catch (error) {
