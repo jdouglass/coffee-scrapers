@@ -27,7 +27,7 @@ async function getProductData(jsonLink) {
       const continent = countryInfo.getContinentName(country);
       const product_url = getProductUrl(item, baseUrl);
       const image_url = getImageUrl(item);
-      const sold_out = (price === '0.00' ? true : false);
+      const sold_out = getSoldOut(item.variants);
       const date_added = getDateAdded(item);
       const product = {
         brand,
@@ -67,10 +67,10 @@ function getPrice(item) {
       return variant.price;
     }
   })
-  if (price.length > 0) {
+  if (!price.includes(undefined)) {
     return price[0];
   }
-  return '0.00'
+  return item[0].price;
 }
 
 function getWeight(item) {
@@ -79,8 +79,8 @@ function getWeight(item) {
       return variant.grams;
     }
   })
-  if (weight.length === 0) {
-    return variant.grams[0];
+  if (weight.includes(undefined)) {
+    return item[0].grams;
   }
   return weight[0];
 }
@@ -173,6 +173,16 @@ function getProductUrl(item, baseUrl) {
 
 function getImageUrl(item) {
   return item.images[0].src;
+}
+
+function getSoldOut(item) {
+  let sold_out = true;
+  item.forEach((variant) => {
+    if (variant.available) {
+      sold_out = false;
+    }
+  })
+  return sold_out;
 }
 
 function getDateAdded(item) {
