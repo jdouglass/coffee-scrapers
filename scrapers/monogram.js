@@ -186,5 +186,5 @@ function getSoldOut(item) {
 }
 
 function getDateAdded(item) {
-  return new Date(item.created_at).toISOString();
+  return new Date(item.published_at).toISOString();
 }
