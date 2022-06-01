@@ -1,14 +1,25 @@
 const { chromium } = require('playwright');
 const countryInfo = require('get-all-country-info');
 const updateDb = require('../productsDb');
+const axios = require('axios');
 
 (async () => {
   const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext();
   const page = await context.newPage();
-  await page.goto("https://www.subtext.coffee/collections/filter-coffee-beans/");
+  const jsonLink = "https://www.subtext.coffee/collections/filter-coffee-beans/products.json";
+  let res = await axios.get(jsonLink);
+  res = res.data.products;
+  let axiosData = [];
+  res = res.map((item) => {
+    if (!item.title.includes('Subscription') && !item.title.includes('Decaf')) {
+      axiosData.push(item);
+    }
+  })
+  const baseUrl = "https://www.subtext.coffee/collections/filter-coffee-beans/";
+  await page.goto(baseUrl);
   const hrefs = await getProductLinks(page);
-  const products = await getProductData(page, hrefs);
+  const products = await getProductData(page, hrefs, axiosData);
   await browser.close();
   const brand = 'Subtext';
   await updateDb(products, brand);
@@ -27,11 +38,11 @@ async function getProductLinks(page) {
   });
 }
 
-async function getProductData(page, hrefs) {
+async function getProductData(page, hrefs, axiosData) {
   let products = [];
   const brand = 'Subtext';
-  for (const link of hrefs) {
-    await page.goto(link);
+  for (let i = 0; i < hrefs.length; i++) {
+    await page.goto(hrefs[i]);
     const title = await getTitle(page);
     const price = await getPrice(page);
     const weight = await getWeight(page);
@@ -40,10 +51,10 @@ async function getProductData(page, hrefs) {
     const variety = await getVariety(page);
     const country = await getCountry(page);
     const continent = countryInfo.getContinentName(country);
-    const product_url = link;
+    const product_url = hrefs[i];
     const image_url = await getImageUrl(page);
-    const sold_out = (price === '0.00' ? true : false);
-    const date_added = new Date().toISOString();
+    const sold_out = getSoldOut(axiosData[i].variants);
+    const date_added = getDateAdded(axiosData[i]);
     const product = {
       brand,
       title,
@@ -126,4 +137,18 @@ async function getVariety(page) {
     }
   }
   return varietyList;
+}
+
+function getSoldOut(item) {
+  let sold_out = true;
+  item.forEach((variant) => {
+    if (variant.available) {
+      sold_out = false;
+    }
+  })
+  return sold_out;
+}
+
+function getDateAdded(item) {
+  return new Date(item.published_at).toISOString();
 }
