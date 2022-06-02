@@ -152,6 +152,9 @@ function getVariety(item) {
     if (word === 'Sl34') {
       return 'SL34';
     }
+    if (word === 'Geisha') {
+      return 'Gesha';
+    }
     return word;
   })
   if (variety.includes('and')) {
