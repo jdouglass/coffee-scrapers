@@ -7,7 +7,7 @@ const brandList = require('../brandList');
   const jsonLink = "https://revolvercoffee.ca/collections/coffee/products.json"
   const products = await getProductData(jsonLink);
   const merchant = 'Revolver Coffee';
-  // await updateDb(products, merchant);
+  await updateDb(products, merchant);
 })();
 
 async function getProductData(jsonLink) {
@@ -49,7 +49,7 @@ async function getProductData(jsonLink) {
     }
   })
   console.log(products);
-  // return products;
+  return products;
 }
 
 function getBrand(item) {

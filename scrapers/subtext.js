@@ -44,7 +44,7 @@ async function getProductData(page, hrefs, axiosData) {
   for (let i = 0; i < hrefs.length; i++) {
     await page.goto(hrefs[i]);
     const title = await getTitle(page);
-    const price = await getPrice(page);
+    const price = getPrice(axiosData[i].variants);
     const weight = await getWeight(page);
     const process = await getProcess(page);
     const process_category = getProcessCategory(process);
@@ -89,8 +89,16 @@ async function getCountry(page) {
   return await page.$eval('.shogun-heading-component', (el) => el.innerText);
 }
 
-async function getPrice(page) {
-  return await page.$eval('.shg-product-price', (el) => el.innerText.substring(1));
+function getPrice(item) {
+  const price = item.map((variant) => {
+    if (variant.available) {
+      return variant.price;
+    }
+  })
+  if (!price.includes(undefined)) {
+    return price[0];
+  }
+  return item[0].price;
 }
 
 async function getWeight(page) {
