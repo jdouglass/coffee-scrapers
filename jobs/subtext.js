@@ -72,7 +72,6 @@ async function getProductData(page, hrefs, axiosData) {
     };
     products.push(product);
   }
-  console.log(products);
   return products;
 }
 

@@ -48,7 +48,6 @@ async function getProductData(jsonLink) {
       products.push(product); 
     }
   })
-  console.log(products);
   return products;
 }
 
@@ -198,7 +197,7 @@ function getVariety(item) {
 }
 
 function getCountry(item) {
-  country = '';
+  let country = '';
   let countryList = countryInfo.getAllCountriesNames();
   countryList.map((countryName) => {
     if (item.title.includes(countryName)) {

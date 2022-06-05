@@ -47,7 +47,6 @@ async function getProductData(jsonLink) {
       products.push(product); 
     }
   })
-  console.log(products);
   return products;
 }
 

@@ -16,7 +16,7 @@ async function getProductData(jsonLink) {
   res = res.data.products;
   const baseUrl = "https://piratesofcoffee.com/collections/coffee";
   res.forEach((item) => {
-    if (!item.title.includes('Sample') && !item.title.includes('Panama Ninety Plus Estates') && !item.title.includes('TREASURE BOX') && !item.title.includes('Subscription') && !item.title.includes('Blend')) {
+    if (!item.title.includes('Sample') && !item.title.includes('Panama Ninety Plus Estates') && !item.title.includes('TREASURE BOX') && !item.title.includes('Subscription') && !item.title.includes('Blend') && !item.title.includes('BAGS')) {
       const title = getTitle(item);
       const price = getPrice(item.variants);
       const weight = getWeight(item.variants);
@@ -47,7 +47,6 @@ async function getProductData(jsonLink) {
       products.push(product); 
     }
   })
-  console.log(products);
   return products;
 }
 
@@ -168,30 +167,18 @@ function getVariety(item) {
 
 function getCountry(item) {
   let country = '';
-  if (item.body_html.includes('Single origin from ')) {
-    country = item.body_html.split('Single origin from ')[1];
-  } else if (item.body_html.includes('Single Origin from ')) {
-    country = item.body_html.split('Single Origin from ')[1];
-  } else if (item.title.includes('FRUIT PUNCH: Ethiopia')) {
-    return 'Ethiopia';
-  }
-  if (item.title.includes('Indonesia') || item.title.includes('INDONESIA')) {
-    return 'Indonesia';
-  }
-  if (item.title.includes('N33')) {
-    return 'Panama';
-  }
-  country = country.split('<')[0];
-  country = country.trim();
-  if (country === 'TIMOR-LESTE') {
-    return 'East Timor';
-  }
-  if (country.includes('Ethiopia')) {
-    return 'Ethiopia';
-  }
-  if (country.includes('Brazil')) {
-    return 'Brazil';
-  }
+  let countryList = countryInfo.getAllCountriesNames();
+  let reportBody = item.body_html.split('Single ')[1];
+  reportBody = reportBody.split('<')[0];
+  countryList.forEach((countryName) => {
+    if (item.title.includes(countryName)) {
+      country = countryName;
+      return country;
+    } else if (reportBody.includes(countryName)) {
+      country = countryName;
+      return country;
+    }
+  })
   return country;
 }
 
