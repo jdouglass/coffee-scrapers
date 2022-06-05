@@ -23,5 +23,7 @@ exports.brandList = [
   'Fritz',
   'Luna',
   'Barn',
-  'Karasu'
+  'Karasu',
+  'House of Funk',
+  'Kudu',
 ]

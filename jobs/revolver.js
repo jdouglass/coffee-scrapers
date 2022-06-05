@@ -16,7 +16,8 @@ async function getProductData(jsonLink) {
   res = res.data.products;
   const baseUrl = "https://revolvercoffee.ca/collections/coffee";
   res.forEach((item) => {
-    if (!item.title.includes('Sample') && !item.title.includes('Instant') && !item.title.includes('Decaf') && !item.title.includes('Espresso')) {
+    if (!item.title.includes('Sample') && !item.title.includes('Instant') && !item.title.includes('Decaf') && item.body_html.includes('Variet')) {
+      console.log(item.title);
       const brand = getBrand(item);
       const price = getPrice(item.variants);
       const weight = getWeight(item.variants);
@@ -30,6 +31,8 @@ async function getProductData(jsonLink) {
       const sold_out = getSoldOut(item.variants);
       const date_added = getDateAdded(item);
       const title = getTitle(item, brand, country);
+      console.log(country);
+      console.log()
       const product = {
         brand,
         title,
@@ -48,7 +51,8 @@ async function getProductData(jsonLink) {
       products.push(product); 
     }
   })
-  console.log(products);
+  // console.log(products);
+  // console.log(products.length)
   return products;
 }
 
@@ -69,13 +73,16 @@ function getTitle(item, brand, country) {
     title = title.replace(country, "");
   }
   if (title.includes('\"')) {
-    title = title.replace('\"', "");
+    title = title.replaceAll('\"', "");
+  }
+  if (title.includes('\'')) {
+    title = title.replaceAll('\'', "");
   }
   if (title.includes('(')) {
-    title = title.replace('(', "");
+    title = title.replaceAll('(', "");
   }
   if (title.includes(')')) {
-    title = title.replace(")", "")
+    title = title.replaceAll(")", "")
   }
   title = title.trim();
   return title;
@@ -157,6 +164,12 @@ function getVariety(item) {
       return word[0] + word.substring(1).toLowerCase();
     })
   }
+  if (variety.includes(' and ')) {
+    variety = variety.split(' and ');
+    variety = variety.map((word) => {
+      return word[0] + word.substring(1).toLowerCase();
+    })
+  }
   if (variety.includes(', ')) {
     variety = variety.split(', ');
     variety = variety.map((word) => {
@@ -192,7 +205,10 @@ function getVariety(item) {
     return [variety[variety.length-1]];
   }
   if (variety.includes('Various')) {
-    return ['Blend']
+    return ['Blend'];
+  }
+  if (variety[0] === "") {
+    return 'Unknown';
   }
   return variety;
 }
@@ -200,11 +216,14 @@ function getVariety(item) {
 function getCountry(item) {
   let country = '';
   let countryList = countryInfo.getAllCountriesNames();
-  countryList.map((countryName) => {
+  let reportBody = item.body_html.split('From')[0];
+  countryList.forEach((countryName) => {
     if (item.title.includes(countryName)) {
       country = countryName;
-    } else if (item.body_html.includes(countryName)) {
+      return country;
+    } else if (reportBody.includes(countryName)) {
       country = countryName;
+      return country;
     }
   })
   return country;
