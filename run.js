@@ -1,3 +1,4 @@
+require('dotenv').config();
 const Bree = require('bree');
 const express = require('express');
 
