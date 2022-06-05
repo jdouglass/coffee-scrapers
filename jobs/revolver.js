@@ -31,8 +31,6 @@ async function getProductData(jsonLink) {
       const sold_out = getSoldOut(item.variants);
       const date_added = getDateAdded(item);
       const title = getTitle(item, brand, country);
-      console.log(country);
-      console.log()
       const product = {
         brand,
         title,
@@ -51,8 +49,6 @@ async function getProductData(jsonLink) {
       products.push(product); 
     }
   })
-  // console.log(products);
-  // console.log(products.length)
   return products;
 }
 
