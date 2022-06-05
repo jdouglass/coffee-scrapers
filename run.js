@@ -1,4 +1,8 @@
-const Bree = require('bree')
+const Bree = require('bree');
+const express = require('express');
+
+const app = express();
+const port = process.env.PORT || 5001;
 
 const bree = new Bree({
   jobs: [
@@ -26,3 +30,7 @@ const bree = new Bree({
 })
 
 bree.start();
+
+app.listen(port, () => {
+  console.log(`server is running and listening on port ${port}`);
+})

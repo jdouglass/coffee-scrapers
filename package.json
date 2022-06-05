@@ -11,6 +11,7 @@
     "axios": "^0.27.2",
     "bree": "^8.0.3",
     "dotenv": "^16.0.1",
+    "express": "^4.18.1",
     "get-all-country-info": "^1.1.6",
     "playwright": "^1.22.2",
     "url": "^0.11.0"
