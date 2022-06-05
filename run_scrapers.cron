@@ -1,4 +1,0 @@
-0 */12 * * * node scrapers/subtext.js
-0 */12 * * * node scrapers/monogram.js
-0 */12 * * * node scrapers/pirates.js
-

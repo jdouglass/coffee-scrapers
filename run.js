@@ -25,4 +25,4 @@ const bree = new Bree({
   ]
 })
 
-bree.run();
+bree.start();
