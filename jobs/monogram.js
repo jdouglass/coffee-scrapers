@@ -3,27 +3,27 @@ const axios = require('axios');
 const updateDb = require('../productsDb');
 
 (async () => {
-  const jsonLink = "https://piratesofcoffee.com/collections/coffee/products.json"
+  const jsonLink = "https://monogramcoffee.com/collections/whole-bean-coffee/products.json"
   const products = await getProductData(jsonLink);
-  const brand = 'Pirates of Coffee';
+  const brand = 'Monogram';
   await updateDb(products, brand);
 })();
 
 async function getProductData(jsonLink) {
-  const brand = 'Pirates of Coffee';
+  const brand = 'Monogram';
   let products = [];
   let res = await axios.get(jsonLink);
   res = res.data.products;
-  const baseUrl = "https://piratesofcoffee.com/collections/coffee";
+  const baseUrl = "https://monogramcoffee.com/collections/whole-bean-coffee";
   res.forEach((item) => {
-    if (!item.title.includes('Sample') && !item.title.includes('Panama Ninety Plus Estates') && !item.title.includes('TREASURE BOX') && !item.title.includes('Subscription') && !item.title.includes('Blend')) {
+    if (!item.title.includes('Decaf') && !item.title.includes('Gift') && !item.title.includes('Instant') && !item.title.includes('Atlas')) {
       const title = getTitle(item);
       const price = getPrice(item.variants);
       const weight = getWeight(item.variants);
       const process = getProcess(item.body_html);
       const process_category = getProcessCategory(process);
       const variety = getVariety(item.body_html);
-      const country = getCountry(item);
+      const country = getCountry(item.body_html);
       const continent = countryInfo.getContinentName(country);
       const product_url = getProductUrl(item, baseUrl);
       const image_url = getImageUrl(item);
@@ -47,18 +47,17 @@ async function getProductData(jsonLink) {
       products.push(product); 
     }
   })
-  console.log(products);
   return products;
 }
 
 function getTitle(item) {
   let title = item.title;
-  title = title.split(':')[0];
-  title = title.split(' ');
-  title = title.map((word) => {
-    return word[0] + word.substring(1).toLowerCase();
-  })
-  return title.join(' ');
+  title = title.split(' - ')[0];
+  title = title.split('*');
+  if (title.length > 1) {
+    return title[2].trim();
+  }
+  return title.toString();
 }
 
 function getPrice(item) {
@@ -86,13 +85,14 @@ function getWeight(item) {
 }
 
 function getProcess(item) {
-  let process = item.split('Process:')[1];
+  let process = item.split('PROCESS:')[1];
   process = process.split('<');
   process = process[0].trim();
-  if (process === 'Anaerobic Natural Process') {
-    return 'Anaerobic Natural';
-  }
-  return process;
+  process = process.split(' ');
+  process = process.map((word) => {
+    return word[0] + word.substring(1).toLowerCase();
+  })
+  return process.join(' ');
 }
 
 function getProcessCategory(process) {
@@ -103,17 +103,9 @@ function getProcessCategory(process) {
 }
 
 function getVariety(item) {
-  let variety = [];
-  if (item.includes('Varietal:')) {
-    variety = item.split('Varietal:')[1];
-  } else {
-    variety = item.split('Variety:')[1];
-  }
+  let variety = item.split('VARIETY:')[1];
   variety = variety.split('<');
   variety = variety[0].trim();
-  if (variety.includes('Ethiopian Landrace')) {
-    return ['Ethiopian Landrace']
-  }
   if (variety.includes(' / ')) {
     variety = variety.split(' / ');
     variety = variety.map((word) => {
@@ -152,9 +144,6 @@ function getVariety(item) {
     if (word === 'Sl34') {
       return 'SL34';
     }
-    if (word === 'Geisha') {
-      return 'Gesha';
-    }
     return word;
   })
   if (variety.includes('and')) {
@@ -167,36 +156,18 @@ function getVariety(item) {
 }
 
 function getCountry(item) {
-  let country = '';
-  if (item.body_html.includes('Single origin from ')) {
-    country = item.body_html.split('Single origin from ')[1];
-  } else if (item.body_html.includes('Single Origin from ')) {
-    country = item.body_html.split('Single Origin from ')[1];
-  } else if (item.title.includes('FRUIT PUNCH: Ethiopia')) {
-    return 'Ethiopia';
-  }
-  if (item.title.includes('Indonesia') || item.title.includes('INDONESIA')) {
-    return 'Indonesia';
-  }
-  if (item.title.includes('N33')) {
-    return 'Panama';
-  }
+  let country = item.split('ORIGIN:')[1];
+  country = country.split(', ')[1];
   country = country.split('<')[0];
   country = country.trim();
   if (country === 'TIMOR-LESTE') {
     return 'East Timor';
   }
-  if (country.includes('Ethiopia')) {
-    return 'Ethiopia';
-  }
-  if (country.includes('Brazil')) {
-    return 'Brazil';
-  }
-  return country;
+  return country[0] + country.substring(1).toLowerCase();
 }
 
 function getProductUrl(item, baseUrl) {
-  return baseUrl + '/products/' + item.handle;
+  return baseUrl + '/products/' + item.handle + '?variant=' + item.variants[0].id;
 }
 
 function getImageUrl(item) {
