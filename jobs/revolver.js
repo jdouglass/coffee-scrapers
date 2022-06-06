@@ -5,12 +5,12 @@ const brandList = require('../brandList');
 
 (async () => {
   const jsonLink = "https://revolvercoffee.ca/collections/coffee/products.json"
-  const products = await getProductData(jsonLink);
-  const merchant = 'Revolver Coffee';
-  await updateDb(products, merchant);
+  const vendor = 'Revolver Coffee';
+  const products = await getProductData(jsonLink, vendor);
+  await updateDb(products, vendor);
 })();
 
-async function getProductData(jsonLink) {
+async function getProductData(jsonLink, vendor) {
   let products = [];
   let res = await axios.get(jsonLink);
   res = res.data.products;
@@ -43,7 +43,8 @@ async function getProductData(jsonLink) {
         product_url,
         image_url,
         sold_out,
-        date_added
+        date_added,
+        vendor
       };
       products.push(product); 
     }
@@ -203,7 +204,7 @@ function getVariety(item) {
     return ['Blend'];
   }
   if (variety[0] === "") {
-    return 'Unknown';
+    return ['Unknown'];
   }
   return variety;
 }

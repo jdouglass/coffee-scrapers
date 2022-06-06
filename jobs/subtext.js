@@ -41,6 +41,7 @@ async function getProductLinks(page) {
 async function getProductData(page, hrefs, axiosData) {
   let products = [];
   const brand = 'Subtext';
+  const vendor = brand;
   for (let i = 0; i < hrefs.length; i++) {
     await page.goto(hrefs[i]);
     const title = await getTitle(page);
@@ -68,7 +69,8 @@ async function getProductData(page, hrefs, axiosData) {
       product_url,
       image_url,
       sold_out,
-      date_added
+      date_added,
+      vendor
     };
     products.push(product);
   }

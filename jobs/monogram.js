@@ -11,6 +11,7 @@ const updateDb = require('../productsDb');
 
 async function getProductData(jsonLink) {
   const brand = 'Monogram';
+  const vendor = brand;
   let products = [];
   let res = await axios.get(jsonLink);
   res = res.data.products;
@@ -42,7 +43,8 @@ async function getProductData(jsonLink) {
         product_url,
         image_url,
         sold_out,
-        date_added
+        date_added,
+        vendor
       };
       products.push(product); 
     }
