@@ -8,22 +8,22 @@ const bree = new Bree({
   jobs: [
     {
       name: 'subtext',
-      cron: '* * * * *'
+      cron: '0 */12 * * *'
 
     },
     {
       name: 'monogram',
-      cron: '* * * * *'
+      cron: '0 */12 * * *'
 
     },
     {
       name: 'pirates',
-      cron: '* * * * *'
+      cron: '0 */12 * * *'
 
     },
     {
       name: 'revolver',
-      cron: '* * * * *'
+      cron: '0 */12 * * *'
 
     },
   ]
