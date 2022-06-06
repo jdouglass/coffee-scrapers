@@ -10,10 +10,18 @@ module.exports = async function update(products, brand) {
     } else {
       try {
         await db.put(`/item?product_url=${item.product_url}`, {
+          brand: item.brand,
+          title: item.title,
           price: item.price,
           weight: item.weight,
-          sold_out: item.sold_out,
+          process: item.process,
+          process_category: item.process_category,
+          variety: item.variety,
+          country: item.country,
+          continent: item.continent,
           image_url: item.image_url,
+          sold_out: item.sold_out,
+          vendor: item.vendor,
           product_url: item.product_url
         });
       } catch (error) {
