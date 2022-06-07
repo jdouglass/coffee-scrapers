@@ -3,27 +3,28 @@ const express = require('express');
 
 const app = express();
 const port = process.env.SCRAPE_PORT || 5101;
+const cronSchedule = '0 * * * *';
 
 const bree = new Bree({
   jobs: [
     {
       name: 'subtext',
-      cron: '0 */12 * * *'
+      cron: cronSchedule
 
     },
     {
       name: 'monogram',
-      cron: '0 */12 * * *'
+      cron: cronSchedule
 
     },
     {
       name: 'pirates',
-      cron: '0 */12 * * *'
+      cron: cronSchedule
 
     },
     {
       name: 'revolver',
-      cron: '0 */12 * * *'
+      cron: cronSchedule
 
     },
   ]
