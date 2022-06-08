@@ -49,8 +49,6 @@ async function getProductData(jsonLink, vendor) {
       products.push(product); 
     }
   })
-  console.log(products)
-  console.log(products.length)
   return products;
 }
 
@@ -150,6 +148,8 @@ function getVariety(item) {
     variety = body.split('Variety:')[1];
   } else if (body.includes('Varieties:')) {
     variety = body.split('Varieties:')[1];
+  } else if (body.includes('Varieites')) {
+    variety = body.split('Varieites:')[1];
   }
   variety = variety.split('<');
   variety = variety[0].trim();
