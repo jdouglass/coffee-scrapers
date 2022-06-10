@@ -18,7 +18,7 @@ async function getProductData(jsonLink, vendor) {
   res.forEach((item) => {
     if (!item.title.includes('Sample') && !item.title.includes('Instant') && !item.title.includes('Decaf') && item.body_html.includes('Varie')) {
       const brand = getBrand(item);
-      const price = getPrice(item.variants);
+      const price = getPrice(item);
       const weight = getWeight(item.variants);
       const process = getProcess(item.body_html);
       const process_category = getProcessCategory(process);
@@ -85,15 +85,11 @@ function getTitle(item, brand, country) {
 }
 
 function getPrice(item) {
-  const price = item.map((variant) => {
-    if (variant.available) {
-      return variant.price;
-    }
-  })
-  if (!price.includes(undefined)) {
-    return price[0];
-  }
-  return item[0].price;
+  let price = item.body_html.split('From')[0];
+  price = price.split(':');
+  price = price[price.length-1];
+  price = price.split('>')[1];
+  return Number(price.split('g')[0]);
 }
 
 function getWeight(item) {
