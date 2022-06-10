@@ -18,8 +18,8 @@ async function getProductData(jsonLink, vendor) {
   res.forEach((item) => {
     if (!item.title.includes('Sample') && !item.title.includes('Instant') && !item.title.includes('Decaf') && item.body_html.includes('Varie')) {
       const brand = getBrand(item);
-      const price = getPrice(item);
-      const weight = getWeight(item.variants);
+      const price = getPrice(item.variants);
+      const weight = getWeight(item);
       const process = getProcess(item.body_html);
       const process_category = getProcessCategory(process);
       const variety = getVariety(item);
@@ -85,23 +85,23 @@ function getTitle(item, brand, country) {
 }
 
 function getPrice(item) {
-  let price = item.body_html.split('From')[0];
-  price = price.split(':');
-  price = price[price.length-1];
-  price = price.split('>')[1];
-  return Number(price.split('g')[0]);
+  const price = item.map((variant) => {
+    if (variant.available) {
+      return variant.price;
+    }
+  })
+  if (!price.includes(undefined)) {
+    return price[0];
+  }
+  return item[0].price;
 }
 
 function getWeight(item) {
-  const weight = item.map((variant) => {
-    if (variant.available) {
-      return variant.grams;
-    }
-  })
-  if (weight.includes(undefined)) {
-    return item[0].grams;
-  }
-  return weight[0];
+  let weight = item.body_html.split('From')[0];
+  weight = weight.split(':');
+  weight = weight[weight.length-1];
+  weight = weight.split('>')[1];
+  return Number(weight.split('g')[0]);
 }
 
 function getProcess(item) {
