@@ -48,7 +48,6 @@ async function getProductData(jsonLink, vendor) {
         vendor
       };
       products.push(product); 
-      console.log(product);
     }
   })
   return products;
