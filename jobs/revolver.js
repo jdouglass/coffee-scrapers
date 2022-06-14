@@ -2,6 +2,7 @@ const countryInfo = require('get-all-country-info');
 const axios = require('axios');
 const updateDb = require('../productsDb');
 const brandList = require('../brandList');
+const worldData = require('../worldData');
 
 (async () => {
   const jsonLink = "https://revolvercoffee.ca/collections/coffee/products.json"
@@ -47,6 +48,7 @@ async function getProductData(jsonLink, vendor) {
         vendor
       };
       products.push(product); 
+      console.log(product);
     }
   })
   return products;
@@ -211,15 +213,15 @@ function getCountry(item) {
   let country = '';
   let countryList = countryInfo.getAllCountriesNames();
   let reportBody = item.body_html.split('From')[0];
-  countryList.forEach((countryName) => {
-    if (item.title.includes(countryName)) {
-      country = countryName;
+  for (const name of worldData.worldData) {
+    if (item.title.includes(name.country)) {
+      country = name.country;
       return country;
-    } else if (reportBody.includes(countryName)) {
-      country = countryName;
+    } else if (reportBody.includes(name.country)) {
+      country = name.country;
       return country;
     }
-  })
+  }
   return country;
 }
 
