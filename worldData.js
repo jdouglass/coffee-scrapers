@@ -864,6 +864,10 @@ exports.worldData = [
       "continent": "Africa"
   },
   {
+      "country": "Timor-Leste",
+      "continent": "Asia"
+  },
+  {
       "country": "Togo",
       "continent": "Africa"
   },
