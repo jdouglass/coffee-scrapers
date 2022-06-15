@@ -25,7 +25,7 @@ async function getProductData(jsonLink, vendor) {
       const process_category = getProcessCategory(process);
       const variety = getVariety(item);
       const country = getCountry(item);
-      const continent = countryInfo.getContinentName(country);
+      const continent = getContinent(country);
       const product_url = getProductUrl(item, baseUrl);
       const image_url = getImageUrl(item);
       const sold_out = getSoldOut(item.variants);
@@ -210,7 +210,6 @@ function getVariety(item) {
 
 function getCountry(item) {
   let country = '';
-  let countryList = countryInfo.getAllCountriesNames();
   let reportBody = item.body_html.split('From')[0];
   for (const name of worldData.worldData) {
     if (item.title.includes(name.country)) {
@@ -222,6 +221,14 @@ function getCountry(item) {
     }
   }
   return country;
+}
+
+function getContinent(country) {
+  for (const name of worldData.worldData) {
+    if (country === name.country) {
+      return name.continent;
+    }
+  }
 }
 
 function getProductUrl(item, baseUrl) {
