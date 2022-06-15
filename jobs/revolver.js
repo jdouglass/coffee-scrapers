@@ -1,4 +1,3 @@
-const countryInfo = require('get-all-country-info');
 const axios = require('axios');
 const updateDb = require('../productsDb');
 const brandList = require('../brandList');
