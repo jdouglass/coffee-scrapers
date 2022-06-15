@@ -7,7 +7,7 @@ const axios = require('axios');
   const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext();
   const page = await context.newPage();
-  const jsonLink = "https://www.subtext.coffee/collections/filter-coffee-beans/products.json";
+  const jsonLink = "https://www.subtext.coffee/collections/filter-coffee-beans/products.json?limit=250";
   let res = await axios.get(jsonLink);
   res = res.data.products;
   let axiosData = [];

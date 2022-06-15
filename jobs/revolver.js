@@ -5,7 +5,7 @@ const brandList = require('../brandList');
 const worldData = require('../worldData');
 
 (async () => {
-  const jsonLink = "https://revolvercoffee.ca/collections/coffee/products.json"
+  const jsonLink = "https://revolvercoffee.ca/collections/coffee/products.json?limit=250"
   const vendor = 'Revolver Coffee';
   const products = await getProductData(jsonLink, vendor);
   await updateDb(products, vendor);

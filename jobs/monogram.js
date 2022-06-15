@@ -3,7 +3,7 @@ const axios = require('axios');
 const updateDb = require('../productsDb');
 
 (async () => {
-  const jsonLink = "https://monogramcoffee.com/collections/whole-bean-coffee/products.json"
+  const jsonLink = "https://monogramcoffee.com/collections/whole-bean-coffee/products.json?limit=250"
   const products = await getProductData(jsonLink);
   const brand = 'Monogram';
   await updateDb(products, brand);
