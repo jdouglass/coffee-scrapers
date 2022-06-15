@@ -158,6 +158,18 @@ function getVariety(item) {
       return word[0] + word.substring(1).toLowerCase();
     })
   }
+  if (variety.includes(' + ')) {
+    variety = variety.split(' + ');
+    variety = variety.map((word) => {
+      return word[0] + word.substring(1).toLowerCase();
+    })
+  }
+  if (variety.includes(' &amp; ')) {
+    variety = variety.split(' &amp; ');
+    variety = variety.map((word) => {
+      return word[0] + word.substring(1).toLowerCase();
+    })
+  }
   if (variety.includes(' and ')) {
     variety = variety.split(' and ');
     variety = variety.map((word) => {
