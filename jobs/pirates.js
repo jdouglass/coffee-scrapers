@@ -1,12 +1,12 @@
-const countryInfo = require('get-all-country-info');
-const axios = require('axios');
+const worldData = require('../worldData');
 const updateDb = require('../productsDb');
+const axios = require('axios');
 
 (async () => {
   const jsonLink = "https://piratesofcoffee.com/collections/coffee/products.json?limit=250"
   const products = await getProductData(jsonLink);
-  const brand = 'Pirates of Coffee';
-  await updateDb(products, brand);
+  const vendor = 'Pirates of Coffee';
+  await updateDb(products, vendor);
 })();
 
 async function getProductData(jsonLink) {
@@ -25,7 +25,7 @@ async function getProductData(jsonLink) {
       const process_category = getProcessCategory(process);
       const variety = getVariety(item.body_html);
       const country = getCountry(item);
-      const continent = countryInfo.getContinentName(country);
+      const continent = getContinent(country);
       const product_url = getProductUrl(item, baseUrl);
       const image_url = getImageUrl(item);
       const sold_out = getSoldOut(item.variants);
@@ -169,19 +169,26 @@ function getVariety(item) {
 
 function getCountry(item) {
   let country = '';
-  let countryList = countryInfo.getAllCountriesNames();
   let reportBody = item.body_html.split('Single ')[1];
   reportBody = reportBody.split('<')[0];
-  countryList.forEach((countryName) => {
-    if (item.title.includes(countryName)) {
-      country = countryName;
+  for (const name of worldData.worldData) {
+    if (item.title.includes(name.country)) {
+      country = name.country;
       return country;
-    } else if (reportBody.includes(countryName)) {
-      country = countryName;
+    } else if (reportBody.includes(name.country)) {
+      country = name.country;
       return country;
     }
-  })
+  }
   return country;
+}
+
+function getContinent(country) {
+  for (const name of worldData.worldData) {
+    if (country === name.country) {
+      return name.continent;
+    }
+  }
 }
 
 function getProductUrl(item, baseUrl) {

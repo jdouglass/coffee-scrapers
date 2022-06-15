@@ -1,7 +1,7 @@
 const url = require('url');
 const db = require('./db')
 
-module.exports = async function update(products, brand) {
+module.exports = async function update(products, vendor) {
   products.forEach(async (item) => {
     const param = new url.URLSearchParams(item);
     const dbItem = await db.get(`/item/product_url?product_url=${param.get('product_url')}`);
@@ -30,23 +30,25 @@ module.exports = async function update(products, brand) {
     }
   });
 
-  const productsByBrand = await db.get(`/item/brand?brand=${brand}`);
-  if (productsByBrand.data.data.length !== 0) {
-    productsByBrand.data.data.forEach(async (productObj) => {
-      let isInDb = false;
-      products.forEach((currentItem) => {
-        if (productObj.product_url === currentItem.product_url) {
+  const productsByVendor = await db.get(`/item/vendor?vendor=${vendor}`);
+  if (productsByVendor.data.data.length !== 0) {
+    let isInDb = false;
+    for await (const dbProduct of productsByVendor.data.data) {
+      isInDb = false;
+      for (const scrapedProduct of products) {
+        if (dbProduct.product_url === scrapedProduct.product_url) {
           isInDb = true;
+          break;
         }
-      });
+      };
       if (!isInDb) {
         try {
-          await db.delete(`/item?product_url=${productObj.product_url}`);
+          await db.delete(`/item?product_url=${dbProduct.product_url}`);
         } catch (error) {
           console.log(error);
         }
         isInDb = false;
       }
-    });
+    };
   }
 }

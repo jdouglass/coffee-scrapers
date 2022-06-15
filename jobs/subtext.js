@@ -1,5 +1,5 @@
 const { chromium } = require('playwright');
-const countryInfo = require('get-all-country-info');
+const worldData = require('../worldData');
 const updateDb = require('../productsDb');
 const axios = require('axios');
 
@@ -21,8 +21,8 @@ const axios = require('axios');
   const hrefs = await getProductLinks(page);
   const products = await getProductData(page, hrefs, axiosData);
   await browser.close();
-  const brand = 'Subtext';
-  await updateDb(products, brand);
+  const vendor = 'Subtext';
+  await updateDb(products, vendor);
 })();
 
 async function getProductLinks(page) {
@@ -51,7 +51,7 @@ async function getProductData(page, hrefs, axiosData) {
     const process_category = getProcessCategory(process);
     const variety = await getVariety(page);
     const country = await getCountry(page);
-    const continent = countryInfo.getContinentName(country);
+    const continent = getContinent(country);
     const product_url = hrefs[i];
     const image_url = await getImageUrl(page);
     const sold_out = getSoldOut(axiosData[i].variants);
@@ -88,6 +88,14 @@ async function getTitle(page) {
 
 async function getCountry(page) {
   return await page.$eval('.shogun-heading-component', (el) => el.innerText);
+}
+
+function getContinent(country) {
+  for (const name of worldData.worldData) {
+    if (country === name.country) {
+      return name.continent;
+    }
+  }
 }
 
 function getPrice(item) {

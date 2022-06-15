@@ -1,12 +1,12 @@
-const countryInfo = require('get-all-country-info');
+const worldData = require('../worldData');
 const axios = require('axios');
 const updateDb = require('../productsDb');
 
 (async () => {
   const jsonLink = "https://monogramcoffee.com/collections/whole-bean-coffee/products.json?limit=250"
   const products = await getProductData(jsonLink);
-  const brand = 'Monogram';
-  await updateDb(products, brand);
+  const vendor = 'Monogram';
+  await updateDb(products, vendor);
 })();
 
 async function getProductData(jsonLink) {
@@ -25,7 +25,7 @@ async function getProductData(jsonLink) {
       const process_category = getProcessCategory(process);
       const variety = getVariety(item.body_html);
       const country = getCountry(item.body_html);
-      const continent = countryInfo.getContinentName(country);
+      const continent = getContinent(country);
       const product_url = getProductUrl(item, baseUrl);
       const image_url = getImageUrl(item);
       const sold_out = getSoldOut(item.variants);
@@ -166,6 +166,14 @@ function getCountry(item) {
     return 'East Timor';
   }
   return country[0] + country.substring(1).toLowerCase();
+}
+
+function getContinent(country) {
+  for (const name of worldData.worldData) {
+    if (country === name.country) {
+      return name.continent;
+    }
+  }
 }
 
 function getProductUrl(item, baseUrl) {
