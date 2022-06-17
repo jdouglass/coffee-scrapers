@@ -26,5 +26,6 @@ exports.brandList = [
   'Karasu',
   'House of Funk',
   'Kudu',
-  'Onyx'
+  'Onyx',
+  'Rogue Wave'
 ]
