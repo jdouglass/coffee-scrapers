@@ -28,5 +28,7 @@ exports.brandList = [
   'Kudu',
   'Onyx',
   'Rogue Wave',
-  'Dak'
+  'Dak',
+  'Kurasu',
+  '3fe'
 ]
