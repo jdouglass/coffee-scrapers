@@ -16,7 +16,7 @@ async function getProductData(jsonLink, vendor) {
   res = res.data.products;
   const baseUrl = "https://revolvercoffee.ca/collections/coffee";
   res.forEach((item) => {
-    if (!item.title.includes('Sample') && !item.title.includes('Instant') && !item.title.includes('Decaf') && !item.title.includes('Tea') && item.body_html.includes('Varie')) {
+    if (!item.title.includes('Sample') && !item.title.includes('Instant') && !item.title.includes('Decaf') && !item.title.includes('Tea') && !item.title.includes('Drip Kit') && item.body_html.includes('Varie')) {
       const brand = getBrand(item);
       const price = getPrice(item.variants);
       const weight = getWeight(item);
