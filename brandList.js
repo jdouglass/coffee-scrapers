@@ -30,5 +30,6 @@ exports.brandList = [
   'Rogue Wave',
   'Dak',
   'Kurasu',
-  '3fe'
+  '3fe',
+  'Night Swim'
 ]
