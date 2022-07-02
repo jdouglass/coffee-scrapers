@@ -31,5 +31,6 @@ exports.brandList = [
   'Dak',
   'Kurasu',
   '3fe',
-  'Night Swim'
+  'Night Swim',
+  'Gardelli'
 ]
