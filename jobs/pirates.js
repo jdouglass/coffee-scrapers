@@ -17,7 +17,7 @@ async function getProductData(jsonLink) {
   res = res.data.products;
   const baseUrl = "https://piratesofcoffee.com/collections/coffee";
   res.forEach((item) => {
-    if (!item.title.includes('Sample') && !item.title.includes('Panama Ninety Plus Estates') && !item.title.includes('TREASURE BOX') && !item.title.includes('Subscription') && !item.title.includes('Blend') && !item.title.includes('BAGS')) {
+    if (!item.title.includes('Sample') && !item.title.includes('Panama Ninety Plus Estates') && !item.title.includes('TREASURE BOX') && !item.title.includes('Subscription') && !item.title.includes('Blend') && !item.title.includes('BAGS') && !item.title.includes('Tea')) {
       const title = getTitle(item);
       const price = getPrice(item.variants);
       const weight = getWeight(item.variants);
