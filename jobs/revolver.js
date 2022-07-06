@@ -238,6 +238,7 @@ function getCountry(item) {
       return name.country;
     }
   }
+  return '';
 }
 
 function getContinent(country) {
