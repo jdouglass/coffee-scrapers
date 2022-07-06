@@ -63,6 +63,7 @@ function getBrand(item) {
 }
 
 function getTitle(item, brand, country) {
+  console.log(country);
   let title = item.title.split(brand)[1];
   title = title.split('*')[0];
   if (title.includes(country)) {
@@ -220,18 +221,24 @@ function getVariety(item) {
 }
 
 function getCountry(item) {
-  let country = '';
   let reportBody = item.body_html.split('From')[0];
+  if (item.title.includes('Sulawesi')) {
+    return 'Indonesia';
+  }
+  item = item.title.toLowerCase();
+  reportBody = reportBody.toLowerCase();
   for (const name of worldData.worldData) {
-    if (item.title.includes(name.country)) {
-      country = name.country;
-      return country;
-    } else if (reportBody.includes(name.country)) {
-      country = name.country;
-      return country;
+    let lowerCaseCountry = name.country.toLowerCase();
+    if (item.includes(lowerCaseCountry)) {
+      return name.country;
     }
   }
-  return country;
+  for (const name of worldData.worldData) {
+    let lowerCaseCountry = name.country.toLowerCase();
+    if (reportBody.includes(lowerCaseCountry)) {
+      return name.country;
+    }
+  }
 }
 
 function getContinent(country) {

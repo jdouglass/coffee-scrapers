@@ -12,7 +12,7 @@ exports.brandList = [
   'Verve',
   'Traffic',
   'Phil & Sebastian',
-  'Santi Henri',
+  'Saint Henri',
   'Little Sister',
   'Process',
   'Stumptown',
@@ -32,5 +32,8 @@ exports.brandList = [
   'Kurasu',
   '3fe',
   'Night Swim',
-  'Gardelli'
+  'Gardelli',
+  'Obadiah',
+  'Nomad',
+  'Koppi'
 ]
