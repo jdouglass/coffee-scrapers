@@ -63,7 +63,6 @@ function getBrand(item) {
 }
 
 function getTitle(item, brand, country) {
-  console.log(country);
   let title = item.title.split(brand)[1];
   title = title.split('*')[0];
   if (title.includes(country)) {
