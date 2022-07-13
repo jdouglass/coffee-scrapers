@@ -35,5 +35,6 @@ exports.brandList = [
   'Gardelli',
   'Obadiah',
   'Nomad',
-  'Koppi'
+  'Koppi',
+  'Tim Wendelboe'
 ]
