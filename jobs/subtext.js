@@ -73,7 +73,6 @@ async function getProductData(page, hrefs, axiosData) {
       vendor
     };
     products.push(product);
-    console.log(product);
   }
   return products;
 }
