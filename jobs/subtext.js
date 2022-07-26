@@ -29,7 +29,7 @@ async function getProductLinks(page) {
   return await page.evaluate(() => {
     let links = [];
     Array.from(document.links).map((item) => {
-      if (item.href.includes('products') && !item.href.includes('subscription') && !item.href.includes('decaf')) {
+      if (item.href.includes('products') && !item.href.includes('subscription') && !item.href.includes('decaf') && !item.href.includes('nitro')) {
         links.push(item.href);
       }
     });
@@ -44,18 +44,18 @@ async function getProductData(page, hrefs, axiosData) {
   const vendor = brand;
   for (let i = 0; i < hrefs.length; i++) {
     await page.goto(hrefs[i]);
-    const title = await getTitle(page);
     const price = getPrice(axiosData[i].variants);
-    const weight = await getWeight(page);
+    const weight = getWeight(axiosData[i].variants);
     const process = await getProcess(page);
     const process_category = getProcessCategory(process);
     const variety = await getVariety(page);
-    const country = await getCountry(page);
+    const country = getCountry(axiosData[i].title);
     const continent = getContinent(country);
     const product_url = hrefs[i];
-    const image_url = await getImageUrl(page);
+    const image_url = getImageUrl(axiosData[i].images);
     const sold_out = getSoldOut(axiosData[i].variants);
     const date_added = getDateAdded(axiosData[i]);
+    const title = getTitle(axiosData[i].title, country);
     const product = {
       brand,
       title,
@@ -73,21 +73,30 @@ async function getProductData(page, hrefs, axiosData) {
       vendor
     };
     products.push(product);
+    console.log(product);
   }
   return products;
 }
 
-async function getImageUrl(page) {
-  return await page.$eval('.shogun-image', (el) => el.src);
+function getImageUrl(item) {
+  let lastItem = item.pop();
+  return lastItem.src;
 }
 
-async function getTitle(page) {
-  const pageHeaders = await page.$$eval('.shogun-heading-component', (nodes) => nodes.map((n) => n.innerText));
-  return pageHeaders[1];
+function getTitle(item, country) {
+  item = item.split(country)[1];
+  return item.split(',')[0].trim();
 }
 
-async function getCountry(page) {
-  return await page.$eval('.shogun-heading-component', (el) => el.innerText);
+function getCountry(item) {
+  item = item.toLowerCase();
+  for (const name of worldData.worldData) {
+    let lowerCaseCountry = name.country.toLowerCase();
+    if (item.includes(lowerCaseCountry)) {
+      return name.country;
+    }
+  }
+  return '';
 }
 
 function getContinent(country) {
@@ -110,9 +119,16 @@ function getPrice(item) {
   return item[0].price;
 }
 
-async function getWeight(page) {
-  const weight = await page.$$eval('option', (nodes) => nodes.map((n) => n.innerText));
-  return Number(weight[0].slice(0, -1));
+function getWeight(item) {
+  const weight = item.map((variant) => {
+    if (variant.available) {
+      return variant.grams;
+    }
+  })
+  if (weight.includes(undefined)) {
+    return item[0].grams;
+  }
+  return weight[0];
 }
 
 async function getProcess(page) {
