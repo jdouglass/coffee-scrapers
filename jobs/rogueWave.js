@@ -4,7 +4,7 @@ const axios = require('axios');
 const updateDb = require('../productsDb');
 
 (async () => {
-  const browser = await chromium.launch({ headless: false });
+  const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext();
   const page = await context.newPage();
   const jsonLink = "https://www.roguewavecoffee.ca/collections/coffee/products.json";
