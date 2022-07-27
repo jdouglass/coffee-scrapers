@@ -10,22 +10,22 @@ const bree = new Bree({
     {
       name: 'subtext',
       cron: cronSchedule
-
     },
     {
       name: 'monogram',
       cron: cronSchedule
-
     },
     {
       name: 'pirates',
       cron: cronSchedule
-
     },
     {
       name: 'revolver',
       cron: cronSchedule
-
+    },
+    {
+      name: 'rogueWave',
+      cron: cronSchedule
     },
   ]
 })
