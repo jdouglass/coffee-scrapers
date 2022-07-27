@@ -197,7 +197,7 @@ async function getVariety(page) {
     if (variety[i] === 'Geisha') {
       variety[i] = 'Gesha';
     }
-  }
+  } 
   return variety;
 }
 
