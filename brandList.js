@@ -39,5 +39,6 @@ exports.brandList = [
   'Tim Wendelboe',
   'Sunday Coffee Project',
   'Father\'s Coffee Roastery',
-  'Morgon'
+  'Morgon',
+  'Red Bank'
 ]
