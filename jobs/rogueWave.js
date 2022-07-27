@@ -73,9 +73,7 @@ async function getProductData(page, hrefs, items, baseUrl) {
       vendor
     };
     products.push(product); 
-    console.log(product);
   }
-  // console.log(products);
   return products;
 }
 
