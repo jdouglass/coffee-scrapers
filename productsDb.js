@@ -1,15 +1,18 @@
-const url = require('url');
-const db = require('./db')
+const { PrismaClient } = require('@prisma/client');
 
-module.exports = async function update(products, vendor) {
-  products.forEach(async (item) => {
-    const param = new url.URLSearchParams(item);
-    const dbItem = await db.get(`/item/product_url?product_url=${param.get('product_url')}`);
-    if (dbItem.data.data.length === 0) {
-      await db.post('/', item);
-    } else {
-      try {
-        await db.put(`/item?product_url=${item.product_url}`, {
+const prisma = new PrismaClient();
+
+module.exports = async function update(productsList, vendor) {
+  productsList.forEach(async (item) => {
+    const dbItem = await prisma.products.findUnique({
+      where: {
+        product_url: item.product_url,
+      },
+    });
+    if (dbItem != null || dbItem != undefined) {
+      await prisma.products.update({
+        where: { id: dbItem.id },
+        data: {
           brand: item.brand,
           title: item.title,
           price: item.price,
@@ -22,20 +25,23 @@ module.exports = async function update(products, vendor) {
           image_url: item.image_url,
           sold_out: item.sold_out,
           vendor: item.vendor,
-          product_url: item.product_url
-        });
-      } catch (error) {
-        console.log(error);
-      }
+        }
+      })
+    } else {
+      await prisma.products.create({
+        data: item,
+      })
     }
   });
 
-  const productsByVendor = await db.get(`/item/vendor?vendor=${vendor}`);
-  if (productsByVendor.data.data.length !== 0) {
+  const productsByVendor = await prisma.products.findMany({
+    where: { vendor }
+  });
+  if (productsByVendor.length !== 0) {
     let isInDb = false;
-    for await (const dbProduct of productsByVendor.data.data) {
+    for await (const dbProduct of productsByVendor) {
       isInDb = false;
-      for (const scrapedProduct of products) {
+      for (const scrapedProduct of productsList) {
         if (dbProduct.product_url === scrapedProduct.product_url) {
           isInDb = true;
           break;
@@ -43,7 +49,9 @@ module.exports = async function update(products, vendor) {
       };
       if (!isInDb) {
         try {
-          await db.delete(`/item?product_url=${dbProduct.product_url}`);
+          await prisma.products.delete({
+            where: { product_url: dbProduct.product_url },
+          });
         } catch (error) {
           console.log(error);
         }

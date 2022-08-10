@@ -1,6 +1,7 @@
 const worldData = require('../worldData');
 const updateDb = require('../productsDb');
 const axios = require('axios');
+const s3 = require('aws-sdk/clients/s3');
 
 (async () => {
   const jsonLink = "https://piratesofcoffee.com/collections/coffee/products.json?limit=250"
@@ -170,6 +171,9 @@ function getVariety(item) {
 function getCountry(item) {
   let country = '';
   let reportBody = item.body_html.split('Single ')[1];
+  if (reportBody === undefined) {
+    reportBody = item.body_html.split('TRANSPARENCY REPORT')[1];
+  }
   reportBody = reportBody.split('<')[0];
   for (const name of worldData.worldData) {
     if (item.title.includes(name.country)) {
@@ -180,10 +184,16 @@ function getCountry(item) {
       return country;
     }
   }
+  if (country === '') {
+    return 'Unknown';
+  }
   return country;
 }
 
 function getContinent(country) {
+  if (country === 'Unknown') {
+    return 'Unknown';
+  }
   for (const name of worldData.worldData) {
     if (country === name.country) {
       return name.continent;
