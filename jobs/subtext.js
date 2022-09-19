@@ -34,6 +34,7 @@ async function getProductLinks(page) {
       }
     });
     links = [...new Set(links)];
+    console.log(links);
     return links;
   });
 }
@@ -56,6 +57,7 @@ async function getProductData(page, hrefs, axiosData) {
     const sold_out = getSoldOut(axiosData[i].variants);
     const date_added = getDateAdded(axiosData[i]);
     const title = getTitle(axiosData[i].title, country);
+    const handle = getHandle(axiosData[i]);
     const product = {
       brand,
       title,
@@ -70,10 +72,12 @@ async function getProductData(page, hrefs, axiosData) {
       image_url,
       sold_out,
       date_added,
-      vendor
+      vendor,
+      handle
     };
     products.push(product);
   }
+  console.log(products);
   return products;
 }
 
@@ -88,17 +92,18 @@ function getTitle(item, country) {
 }
 
 function getCountry(item) {
-  item = item.toLowerCase();
   for (const name of worldData.worldData) {
-    let lowerCaseCountry = name.country.toLowerCase();
-    if (item.includes(lowerCaseCountry)) {
+    if (item.includes(name.country)) {
       return name.country;
     }
   }
-  return '';
+  return 'Unknown';
 }
 
 function getContinent(country) {
+  if (country === 'Unknown') {
+    return 'Unknown';
+  }
   for (const name of worldData.worldData) {
     if (country === name.country) {
       return name.continent;
@@ -183,4 +188,8 @@ function getSoldOut(item) {
 
 function getDateAdded(item) {
   return new Date(item.published_at).toISOString();
+}
+
+function getHandle(item) {
+  return item.handle;
 }

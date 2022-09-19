@@ -1,7 +1,6 @@
 const worldData = require('../worldData');
 const updateDb = require('../productsDb');
 const axios = require('axios');
-const s3 = require('aws-sdk/clients/s3');
 
 (async () => {
   const jsonLink = "https://piratesofcoffee.com/collections/coffee/products.json?limit=250"
@@ -31,6 +30,7 @@ async function getProductData(jsonLink) {
       const image_url = getImageUrl(item);
       const sold_out = getSoldOut(item.variants);
       const date_added = getDateAdded(item);
+      const handle = getHandle(item);
       const product = {
         brand,
         title,
@@ -45,9 +45,10 @@ async function getProductData(jsonLink) {
         image_url,
         sold_out,
         date_added,
-        vendor
+        vendor,
+        handle
       };
-      products.push(product); 
+      products.push(product);
     }
   })
   return products;
@@ -221,4 +222,8 @@ function getSoldOut(item) {
 
 function getDateAdded(item) {
   return new Date(item.published_at).toISOString();
+}
+
+function getHandle(item) {
+  return item.handle;
 }

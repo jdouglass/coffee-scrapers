@@ -56,6 +56,7 @@ async function getProductData(page, hrefs, items, baseUrl) {
     const sold_out = getSoldOut(items[i].variants);
     const date_added = getDateAdded(items[i]);
     const title = getTitle(items[i], country);
+    const handle = getHandle(items[i]);
     const product = {
       brand,
       title,
@@ -70,7 +71,8 @@ async function getProductData(page, hrefs, items, baseUrl) {
       image_url,
       sold_out,
       date_added,
-      vendor
+      vendor,
+      handle
     };
     products.push(product); 
   }
@@ -115,9 +117,9 @@ function getWeight(item) {
   }
   if (weight.includes(' KG')) {
     weight = weight.split(' KG')[0];
-    return weight.trim() * 1000;
+    return Number(weight.trim() * 1000);
   } else {
-    return weight.slice(0, -1);
+    return Number(weight.slice(0, -1));
   }
 }
 
@@ -247,4 +249,8 @@ function getSoldOut(item) {
 
 function getDateAdded(item) {
   return new Date(item.published_at).toISOString();
+}
+
+function getHandle(item) {
+  return item.handle;
 }

@@ -11,7 +11,7 @@ datasource db {
 }
 
 model products {
-  id               Int      @id @default(autoincrement())
+  id               Int      @id @unique @default(autoincrement())
   brand            String   @db.VarChar(50)
   title            String   @db.VarChar(100)
   price            String   @db.VarChar(6)
@@ -26,4 +26,5 @@ model products {
   sold_out         Boolean  @db.Boolean
   date_added       DateTime @db.Timestamp()
   vendor           String   @db.VarChar(20)
+  handle           String   @db.Text
 }

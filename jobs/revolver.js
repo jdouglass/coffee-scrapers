@@ -16,7 +16,7 @@ async function getProductData(jsonLink, vendor) {
   res = res.data.products;
   const baseUrl = "https://revolvercoffee.ca/collections/coffee";
   res.forEach((item) => {
-    if (!item.title.includes('Sample') && !item.title.includes('Instant') && !item.title.includes('Decaf') && !item.title.includes('Tea') && !item.title.includes('Drip Kit') && item.body_html.includes('Varie')) {
+    if (!item.title.includes('Sample') && !item.title.includes('Instant') && !item.title.includes('Decaf') && !item.title.includes('Tea') && !item.title.includes('Drip Kit') && !item.handle.includes('capsule') && !item.handle.includes('pods') && !item.handle.includes('cans')) {
       const brand = getBrand(item);
       const price = getPrice(item.variants);
       const weight = getWeight(item);
@@ -30,6 +30,7 @@ async function getProductData(jsonLink, vendor) {
       const sold_out = getSoldOut(item.variants);
       const date_added = getDateAdded(item);
       const title = getTitle(item, brand, country);
+      const handle = getHandle(item);
       const product = {
         brand,
         title,
@@ -44,9 +45,10 @@ async function getProductData(jsonLink, vendor) {
         image_url,
         sold_out,
         date_added,
-        vendor
+        vendor,
+        handle
       };
-      products.push(product); 
+      products.push(product);
     }
   })
   return products;
@@ -97,10 +99,12 @@ function getPrice(item) {
 }
 
 function getWeight(item) {
-  let weight = item.body_html.split('From')[0];
-  weight = weight.split(':');
-  weight = weight[weight.length-1];
+  let weight = item.body_html.split('Roast Date:')[1];
   weight = weight.split('>')[1];
+  weight = weight.split('<')[0];
+  if (weight === NaN || weight === 'NaN' || weight === undefined) {
+    return 0;
+  }
   return Number(weight.split('g')[0]);
 }
 
@@ -130,6 +134,9 @@ function getProcessCategory(process) {
 }
 
 function getVariety(item) {
+  if (!item.body_html.includes('Variet')) {
+    return 'Unknown';
+  }
   let title = item.title;
   if (title.includes('Instrumental')) {
     return ['Caturra', 'Castillo', 'Colombia'];
@@ -238,10 +245,13 @@ function getCountry(item) {
       return name.country;
     }
   }
-  return '';
+  return 'Unknown';
 }
 
 function getContinent(country) {
+  if (country === '' || country === 'Unknown') {
+    return 'Unknown';
+  }
   for (const name of worldData.worldData) {
     if (country === name.country) {
       return name.continent;
@@ -269,4 +279,8 @@ function getSoldOut(item) {
 
 function getDateAdded(item) {
   return new Date(item.published_at).toISOString();
+}
+
+function getHandle(item) {
+  return item.handle;
 }

@@ -17,7 +17,7 @@ async function getProductData(jsonLink) {
   res = res.data.products;
   const baseUrl = "https://monogramcoffee.com/collections/whole-bean-coffee";
   res.forEach((item) => {
-    if (!item.title.includes('Decaf') && !item.title.includes('Gift') && !item.title.includes('Instant') && !item.title.includes('Atlas')) {
+    if (!item.title.includes('Decaf') && !item.title.includes('Gift') && !item.title.includes('Instant') && !item.title.includes('Atlas') && !item.handle.includes('pack')) {
       const title = getTitle(item);
       const price = getPrice(item.variants);
       const weight = getWeight(item.variants);
@@ -30,6 +30,7 @@ async function getProductData(jsonLink) {
       const image_url = getImageUrl(item);
       const sold_out = getSoldOut(item.variants);
       const date_added = getDateAdded(item);
+      const handle = getHandle(item);
       const product = {
         brand,
         title,
@@ -44,7 +45,8 @@ async function getProductData(jsonLink) {
         image_url,
         sold_out,
         date_added,
-        vendor
+        vendor,
+        handle
       };
       products.push(product); 
     }
@@ -196,4 +198,8 @@ function getSoldOut(item) {
 
 function getDateAdded(item) {
   return new Date(item.published_at).toISOString();
+}
+
+function getHandle(item) {
+  return item.handle;
 }
